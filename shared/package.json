@@ -7,6 +7,8 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "drizzle-orm": "^0.44.2",
+    "drizzle-zod": "^0.8.2",
     "new-era-connect": "file:..",
     "zod": "^3.22.4"
   },

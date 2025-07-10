@@ -8,7 +8,11 @@
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
     "build": "npm run build --prefix client && npm run build --prefix server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:push": "cd server && drizzle-kit push",
+    "db:generate": "cd server && drizzle-kit generate",
+    "db:studio": "cd server && drizzle-kit studio",
+    "db:seed": "cd server && tsx seed.ts"
   },
   "keywords": [
     "business-card",
@@ -25,5 +29,12 @@
   ],
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.4",
+    "@types/pg": "^8.15.4",
+    "drizzle-kit": "^0.31.4",
+    "drizzle-orm": "^0.44.2",
+    "postgres": "^3.4.7"
   }
 }
