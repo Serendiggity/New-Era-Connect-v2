@@ -28,14 +28,17 @@ export const ensureUserExists = async (
       .limit(1);
 
     if (existingUser.length === 0) {
-      // Create user
+      // Create user with default organization
       await db.insert(users).values({
         id: userId,
         email,
         firstName,
         lastName,
         imageUrl,
+        orgId: 1, // Default organization
       });
+      
+      console.log(`Created new user ${userId} in default organization`);
     }
 
     next();
