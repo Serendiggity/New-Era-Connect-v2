@@ -1,0 +1,104 @@
+---
+alwaysApply: true
+---
+## **2. Dashboard Page (`/`)**
+
+**Goal:** To provide a high-level, at-a-glance summary of the user's activity.
+
+*   **Layout:** A 2x2 grid of key statistics at the top, with a list of recent activity below.
+*   **Components:**
+    *   **Top Row:**
+        1.  `StatsCard` component showing "Total Contacts".
+        2.  `StatsCard` component showing "Events Attended".
+    *   **Bottom Row:**
+        1.  `StatsCard` component showing "Lead Groups Created".
+        2.  `StatsCard` component showing "Avg. Card Accuracy".
+    *   **Recent Activity List:**
+        *   A `Card` component with a `CardHeader` titled "Recent Activity".
+        *   The `CardContent` will contain a list of the 5 most recently added contacts, showing their name and company.
+
+---
+
+## 3. Events Page (`/events`)
+
+**Goal:** To allow users to see all their created events and navigate to the details of a specific event.
+
+*   **Layout:** A simple header with a call-to-action button, followed by a grid of event cards.
+*   **Components:**
+    *   **Header:** A `flex` container.
+        *   **Left Side:** An `h1` title: "Events".
+        *   **Right Side:** A "Create New Event" button which opens a `CreateEventModal`.
+    *   **Event Grid:**
+        *   A responsive grid displaying `EventCard` components.
+        *   Each `EventCard` should display the event's name and date.
+        *   Clicking on an `EventCard` navigates the user to the `/events/:id` page for that event.
+
+---
+
+## 4. Event Detail Page (`/events/:id`)
+
+**Goal:** To show the details of a specific event, including all contacts and business card uploads associated with it.
+
+*   **Layout:** A two-tabbed view.
+*   **Components:**
+    *   **Header:** An `h1` title that dynamically displays the event's name (e.g., "WebSummit 2024"). A "Scan New Card" button should be present, linking to the `/scan` page with the event ID pre-filled.
+    *   **Tabs:** A `Tabs` component with two tabs: "Contacts" and "Card Uploads".
+        *   **"Contacts" Tab:** Contains a `ContactTable` showing only the contacts associated with this event.
+        *   **"Card Uploads" Tab:** Contains a `RecentUploadsList` showing the status of all business cards uploaded for this event.
+
+---
+
+## 5. Scan Card Page (`/scan`)
+
+**Goal:** To provide a simple, intuitive interface for uploading a business card image and associating it with an event.
+
+*   **Layout:** A single, centered card containing the upload functionality.
+*   **Components:**
+    *   **Main Card:** A `Card` component with a `CardHeader` titled "Scan New Business Card".
+    *   **Card Content:**
+        1.  A `Select` dropdown labeled "Select Event". This is for choosing which event the new card belongs to. It is a required field.
+        2.  The `FileUpload` component (our drag-and-drop zone).
+        3.  A "Submit" button that is disabled until an event is selected and a file has been added.
+
+---
+
+## **6. Contacts Page (`/contacts`)**
+
+**Goal:** To view, manage, and search all contacts.
+
+*   **Layout:** A full-page data table with a search and action bar at the top.
+*   **Components:**
+    *   **Search & Action Bar:**
+        *   **Left Side:** A Search Input field for the **Natural Language Search** feature.
+        *   **Right Side:** A "Save to Group" button (disabled until rows are selected) and a "Delete Selected" button (also disabled).
+    *   **Contact Table (`ContactTable.tsx`):**
+        *   A data table with columns for: Checkbox (for selection), Name, Email, Company, Title, and Event.
+        *   Should support multi-row selection.
+
+---
+
+## **7. Emails Page (`/emails`)**
+
+**Goal:** To manage email templates and generate personalized drafts for lead groups. This is our most complex page and requires a multi-section layout.
+
+*   **Layout:** A three-section vertical layout.
+
+    *   **Section 1: Connection Status (Top)**
+        *   A single `Card` component spanning the full width.
+        *   **Content:** A simple `flex` container with "Gmail Connection Status" text on the left and the `GoogleConnectButton` component on the right.
+
+    *   **Section 2: Draft Generation (Middle)**
+        *   A `Card` component with a `CardHeader` titled "Generate New Drafts".
+        *   **Content:** A three-step form:
+            1.  A `Select` dropdown labeled "1. Choose a Lead Group". This will be populated with the user's created lead groups.
+            2.  A `Select` dropdown labeled "2. Choose an Email Template". This will be populated with the user's created templates.
+            3.  A `Button` labeled "Generate AI Drafts". This will be disabled until both a group and a template are selected.
+
+    *   **Section 3: Templates & Drafts (Bottom)**
+        *   A `Tabs` component with two tabs: "Email Templates" and "Generated Drafts".
+        *   **"Email Templates" Tab:**
+            *   An "Add New Template" button that opens a modal for creation.
+            *   A list or table (`TemplateList.tsx`) of existing templates, showing the name and subject. Each row should have edit and delete buttons.
+        *   **"Generated Drafts" Tab:**
+            *   A list or table (`DraftList.tsx`) of generated drafts.
+            *   Columns: Contact Name, Draft Subject, Status ("Draft"), and an "Actions" column containing a "View & Send" button. 

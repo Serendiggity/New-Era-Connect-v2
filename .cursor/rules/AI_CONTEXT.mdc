@@ -1,0 +1,185 @@
+---
+alwaysApply: true
+---
+# AI Assistant Context & Best Practices
+
+This document provides critical context and instructions for AI assistants working on the New Era Connect project.
+
+## 1. Documentation Requirements
+
+### DECISIONS.md Tracking
+**CRITICAL:** Every significant technical decision MUST be logged in `DECISIONS.md` using the specified format:
+- Architecture changes
+- Library selections
+- API design choices
+- Database schema decisions
+- Deployment configurations
+
+### Feature README Files
+Each feature in `server/features/[feature]/` MUST have a `README.md` containing:
+```markdown
+# [Feature Name] Feature
+
+## Purpose
+Brief description of what this feature handles
+
+## API Endpoints
+- `GET /api/[feature]` - Description
+- `POST /api/[feature]` - Description
+
+## Database Tables
+- `table_name` - What it stores
+
+## Service Methods
+- `methodName()` - What it does
+
+## Dependencies
+- Which other features this depends on
+- External services used
+
+## Testing
+- How to test this feature
+- Key test scenarios
+```
+
+## 2. Code Organization Principles
+
+### Feature Independence
+- Each feature should be self-contained
+- Cross-feature communication only through service methods
+- No direct database queries across features
+- Shared types go in `shared/schema.ts`
+
+### Consistent Patterns
+```typescript
+// Always structure routes files like this:
+import { Router } from 'express';
+import { requireAuth } from '@clerk/express';
+import * as service from './[feature].service';
+
+const router = Router();
+
+// Routes here...
+
+export default router;
+```
+
+```typescript
+// Always structure service files like this:
+import { db } from '@/server/db';
+import { [feature]Table } from '@/shared/schema';
+
+// Service methods here...
+```
+
+## 3. Database & Supabase Guidelines
+
+### Supabase Usage
+- **Use for:** Postgres database, object storage
+- **Don't use for:** Authentication (we use Clerk), real-time (unless specifically needed)
+- **Connection:** Through Drizzle ORM only
+- **Migrations:** Always use `npm run db:push` after schema changes
+
+### Image Storage Pattern
+```typescript
+// When storing business card images:
+// 1. Upload to Supabase Storage
+// 2. Store URL reference in database
+// 3. Use signed URLs for security
+```
+
+## 4. Error Handling Standards
+
+### API Responses
+```typescript
+// Success
+res.json({ data: result });
+
+// Error
+res.status(400).json({ error: 'Descriptive error message' });
+
+// Not found
+res.status(404).json({ error: 'Resource not found' });
+```
+
+### Service Layer
+- Throw errors with descriptive messages
+- Let route handlers catch and format responses
+- Log errors for debugging
+
+## 5. Testing Approach
+
+### Development Workflow
+1. Implement feature following TDD when possible
+2. Test API endpoints with Thunder Client/Postman
+3. Verify database changes with Drizzle Studio
+4. Test UI integration with React DevTools
+
+### Before Marking Complete
+- [ ] API endpoint responds correctly
+- [ ] Database operations work as expected
+- [ ] Frontend displays data properly
+- [ ] Error cases handled gracefully
+- [ ] Feature README updated
+
+## 6. AI Collaboration Guidelines
+
+### Context Management
+- Start each session by reading relevant feature READMEs
+- Check DECISIONS.md for recent decisions
+- Look for patterns in existing features before implementing new ones
+
+### Code Generation
+- Always follow established patterns
+- Generate complete, runnable code
+- Include all necessary imports
+- Add helpful comments for complex logic
+
+### Communication
+- Explain decisions and trade-offs
+- Ask for clarification when requirements are ambiguous
+- Suggest improvements when you see opportunities
+- Flag potential issues early
+
+## 7. Security Considerations
+
+### Authentication
+- All API routes require `requireAuth()` middleware unless explicitly public
+- User ID comes from `req.auth.userId` (Clerk)
+- Never trust client-provided user IDs
+
+### Data Access
+- Always filter by user ID in queries
+- Use parameterized queries (Drizzle handles this)
+- Validate input with Zod schemas
+
+## 8. Performance Guidelines
+
+### Database Queries
+- Use indexes on frequently queried columns
+- Avoid N+1 queries (use joins when needed)
+- Paginate large result sets
+
+### API Design
+- Keep payloads focused (don't over-fetch)
+- Use appropriate HTTP methods
+- Cache when it makes sense
+
+## 9. Git Workflow
+
+### Branch Naming
+- `feat/[feature-name]` for new features
+- `fix/[issue-description]` for bug fixes
+- `refactor/[what-is-being-refactored]` for refactoring
+
+### Commit Messages
+- Use conventional commits: `feat:`, `fix:`, `docs:`, `refactor:`
+- Be descriptive but concise
+- Reference issue numbers when applicable
+
+## 10. Remember
+
+- **You are building for an AI-assisted future** - Make code readable and well-documented
+- **Consistency > Cleverness** - Follow patterns even if you know a "better" way
+- **Test as you go** - Don't wait until the end to verify functionality
+- **Document decisions** - Future you (or another AI) will thank you

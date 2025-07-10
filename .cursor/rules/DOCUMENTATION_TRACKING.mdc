@@ -1,0 +1,72 @@
+---
+alwaysApply: true
+---
+
+---
+title: Documentation Tracking Rules
+
+This rule ensures AI assistants maintain proper documentation throughout the project.
+
+## Required Documentation Files
+
+### 1. DECISIONS.md (Project Root)
+**CRITICAL:** Every significant technical decision MUST be logged in `DECISIONS.md` using this format:
+```markdown
+### [Date] - Decision Title
+**Context:** Why this decision was needed
+**Decision:** What we decided
+**Alternatives Considered:** Other options we evaluated
+**Rationale:** Why we chose this approach
+**Consequences:** What this means for the project
+```
+
+Examples of decisions that MUST be logged:
+- Architecture patterns or changes
+- Library/framework selections
+- API design choices
+- Database schema decisions
+- Deployment configurations
+- Performance optimizations
+- Security implementations
+
+### 2. Feature README Files
+Each feature in `server/features/[feature]/` MUST have a `README.md`. Use the template at `server/features/README_TEMPLATE.md`.
+
+Required sections:
+- Purpose
+- API Endpoints (with auth requirements, params, responses)
+- Database Tables
+- Service Methods
+- Dependencies (internal and external)
+- Error Handling
+- Testing scenarios
+- Performance considerations
+- Security notes
+
+### 3. Update Tracking
+
+When making changes:
+1. **Before implementing:** Check if this requires a DECISIONS.md entry
+2. **During implementation:** Update feature README as you code
+3. **After implementation:** 
+   - Verify DECISIONS.md is updated
+   - Ensure feature README is complete
+   - Update any affected documentation
+
+### 4. Documentation Standards
+
+- Use clear, concise language
+- Include code examples where helpful
+- Date all entries
+- Explain the "why" not just the "what"
+- Consider future developers (including AI assistants)
+
+## Enforcement
+
+**DO NOT** proceed with implementation if:
+- A significant decision hasn't been documented
+- The feature README is missing or incomplete
+- Cross-feature impacts haven't been noted
+
+Remember: Good documentation is as important as good code in an AI-assisted development environment.
+---

@@ -1,0 +1,39 @@
+---
+alwaysApply: true
+---
+## 2. Backend Philosophy: The "Feature-Sliced" Architecture
+
+This is the most critical concept. We organize the backend by feature to ensure low coupling and high cohesion. This is our primary strategy for managing complexity and enabling effective collaboration.
+
+*   **`server/features/` is the Core of the Backend.**
+    *   All business logic is organized into subdirectories within this folder (e.g., `server/features/contacts/`, `server/features/events/`).
+    *   Each feature folder is a self-contained "module" and should contain, at a minimum:
+        *   `[feature].routes.ts`: Defines all API routes related to this feature. It exports an `express.Router()`.
+        *   `[feature].service.ts`: Contains all business logic, database queries, and external API calls for this feature.
+    *   **Your primary workspace will be within a single feature folder.** You should rarely need to edit files across multiple feature folders in a single task.
+
+*   **`server/routes.ts` is an Aggregator.**
+    *   Its **only** job is to import the router from each feature module in `server/features/` and tell the main `app` to use it. It contains no business logic itself.
+
+*   **`server/index.ts` is the Mainframe.**
+    *   It is the **only** place that creates the main `express` app and applies global middleware (like Clerk authentication).
+
+---
+
+## 3. The User Creation Pattern: Just-In-Time (JIT) Provisioning
+
+*   **The Problem:** When a user signs up with Clerk, our database doesn't know about them.
+*   **The Solution:** We create the user record the very first time they make an authenticated API call.
+*   **The Implementation:** This is handled by a dedicated `ensureUserExists` middleware, which is applied globally in `server/index.ts` immediately after the main Clerk authentication middleware.
+*   **Your Responsibility:** You do not need to worry about this. Simply know that any authenticated route handler can safely assume `req.auth.userId` exists and corresponds to a valid user in our database.
+
+---
+
+## 4. Frontend Philosophy: Predictable State Management
+
+*   **Server State** (data from the backend) **MUST** be managed by TanStack Query (`useQuery`, `useMutation`).
+*   **UI State** (e.g., a modal being open) can be managed by `useState`.
+*   **Component Structure:**
+    *   `pages/`: Top-level components for each page.
+    *   `components/ui/`: Base Shadcn components. **Do not modify.**
+    *   `components/`: Custom, reusable components built from the base elements. 

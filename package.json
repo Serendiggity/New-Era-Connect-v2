@@ -1,0 +1,29 @@
+{
+  "name": "new-era-connect",
+  "version": "1.0.0",
+  "description": "AI-powered business card management and networking application",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "build": "npm run build --prefix client && npm run build --prefix server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "business-card",
+    "networking",
+    "ai",
+    "contact-management"
+  ],
+  "author": "",
+  "license": "MIT",
+  "workspaces": [
+    "client",
+    "server",
+    "shared"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
