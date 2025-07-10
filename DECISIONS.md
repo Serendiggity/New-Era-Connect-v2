@@ -172,4 +172,32 @@ This document tracks all significant technical decisions made during the develop
 
 ## Future Decisions
 
-This document will be updated as new significant technical decisions are made during development. 
+This document will be updated as new significant technical decisions are made during development.
+
+## 2024-01-10 - Database Schema Update: Multi-Tenancy Support
+
+**Context:** User clarified that the future state requires support for multiple users from the same business organization, along with detailed tracking for analytics and reporting.
+
+**Decision:** 
+- Add organizations table for multi-tenancy
+- Include proper status tracking for business cards (processing, completed, failed, pending_review, user_verified)
+- Add gmail_connections table for OAuth token storage
+- Include analytics tables (daily_stats, activity_logs) for dashboard reporting
+- Maintain compatibility with existing code (TEXT for Clerk IDs, SERIAL for other IDs)
+
+**Alternatives Considered:**
+- Single-tenant design (rejected as it would require major refactoring later)
+- UUID-based IDs (rejected to maintain compatibility with existing code)
+- Complex RBAC system (deferred to future iteration)
+
+**Rationale:**
+- Multi-tenancy is a core requirement for the business model
+- Analytics are essential for user value and business insights
+- Simple organization model is sufficient for MVP
+- Maintaining ID compatibility reduces refactoring effort
+
+**Consequences:**
+- Database is ready for multi-tenant operations
+- Analytics can be implemented incrementally
+- Some queries will need org_id filtering
+- Future RBAC implementation will be straightforward 
