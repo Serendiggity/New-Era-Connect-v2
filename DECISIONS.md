@@ -201,3 +201,27 @@ This document will be updated as new significant technical decisions are made du
 - Analytics can be implemented incrementally
 - Some queries will need org_id filtering
 - Future RBAC implementation will be straightforward 
+
+### 2024-12-26 - Events Frontend Integration
+
+**Context:** After successfully implementing the Events Management API, we needed to build the frontend UI to consume these APIs and provide a complete user experience for event management.
+
+**Decision:** Implement a React-based frontend with TanStack Query for data fetching, featuring:
+- Real-time data synchronization with the API
+- Create, Read, Update, Delete (CRUD) operations for events
+- Modal-based forms for creating and editing events
+- Confirmation dialogs for destructive actions
+- Responsive design with mobile and desktop carousels
+
+**Alternatives Considered:** 
+- Using Redux for state management (too complex for current needs)
+- Server-side rendering with Next.js (not needed for this admin-style interface)
+- Basic fetch without TanStack Query (would lack caching and optimistic updates)
+
+**Rationale:** TanStack Query provides excellent caching, background refetching, and optimistic update capabilities out of the box. The modal-based approach keeps the UI clean and focused, while the carousel design showcases events attractively.
+
+**Consequences:** 
+- Seamless integration with the backend API
+- Excellent user experience with loading states and error handling
+- Easy to extend with additional features like filtering and searching
+- Proper separation of concerns between UI and data fetching logic 
