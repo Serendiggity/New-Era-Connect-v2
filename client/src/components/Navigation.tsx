@@ -23,8 +23,8 @@ import {
 const navItems = [
   { path: '/', icon: Grid3X3, label: 'Dashboard' },
   { path: '/events', icon: CalendarDays, label: 'Events' },
-  { path: '/contacts', icon: Users2, label: 'Contacts' },
   { path: '/scan', icon: ScanLine, label: 'Scan Cards' },
+  { path: '/contacts', icon: Users2, label: 'Contacts' },
   { path: '/emails', icon: Send, label: 'Emails' },
 ];
 
