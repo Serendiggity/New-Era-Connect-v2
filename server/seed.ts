@@ -31,6 +31,12 @@ async function seed() {
       console.log('ℹ️  Default organization already exists');
     }
 
+    // This is the fix:
+    // Manually update the sequence for the organizations table's ID.
+    // This prevents primary key conflicts when the next organization is created automatically.
+    await sql`SELECT setval('organizations_id_seq', COALESCE((SELECT MAX(id) FROM organizations), 1))`;
+    console.log('✅ Organization ID sequence updated.');
+
     console.log('Seeding completed!');
   } catch (error) {
     console.error('Seeding failed:', error);
