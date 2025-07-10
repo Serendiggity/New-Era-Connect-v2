@@ -1,12 +1,12 @@
+// Load environment variables FIRST
+import dotenv from 'dotenv';
+dotenv.config({ path: '../.env' });
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { requireAuth } from '@clerk/express';
 import routes from './routes';
 import { ensureUserExists } from './middleware/ensure-user-exists';
-
-// Load environment variables
-dotenv.config({ path: '../.env' });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
