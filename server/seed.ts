@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { organizations } from '@new-era-connect/shared';
+import { users } from '@new-era-connect/shared';
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -15,27 +15,28 @@ async function seed() {
   
   const sql = postgres(process.env.DATABASE_URL, { max: 1 });
   const db = drizzle(sql, { 
-    schema: { organizations } 
+    schema: { users } 
   });
 
   try {
-    // Create default organization
-    const result = await db.insert(organizations).values({
+    // Create default user
+    const result = await db.insert(users).values({
       id: 1,
-      name: 'Default Organization'
+      email: 'user@newera-connect.com',
+      firstName: 'Default',
+      lastName: 'User',
+      imageUrl: null,
     }).onConflictDoNothing().returning();
 
     if (result.length > 0) {
-      console.log('✅ Default organization created');
+      console.log('✅ Default user created');
     } else {
-      console.log('ℹ️  Default organization already exists');
+      console.log('ℹ️  Default user already exists');
     }
 
-    // This is the fix:
-    // Manually update the sequence for the organizations table's ID.
-    // This prevents primary key conflicts when the next organization is created automatically.
-    await sql`SELECT setval('organizations_id_seq', COALESCE((SELECT MAX(id) FROM organizations), 1))`;
-    console.log('✅ Organization ID sequence updated.');
+    // Update the sequence for the users table's ID
+    await sql`SELECT setval('users_id_seq', COALESCE((SELECT MAX(id) FROM users), 1))`;
+    console.log('✅ User ID sequence updated.');
 
     console.log('Seeding completed!');
   } catch (error) {

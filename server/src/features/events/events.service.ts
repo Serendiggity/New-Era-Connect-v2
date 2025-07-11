@@ -3,7 +3,7 @@ import { db } from '../../db';
 import { events, type Event, type InsertEvent } from '../../../../shared/schema';
 
 export class EventsService {
-  async getEvents(userId: string): Promise<Event[]> {
+  async getEvents(userId: number): Promise<Event[]> {
     const userEvents = await db
       .select()
       .from(events)
@@ -13,7 +13,7 @@ export class EventsService {
     return userEvents;
   }
 
-  async getEventById(userId: string, eventId: number): Promise<Event | null> {
+  async getEventById(userId: number, eventId: number): Promise<Event | null> {
     const event = await db
       .select()
       .from(events)
@@ -23,17 +23,12 @@ export class EventsService {
     return event[0] || null;
   }
 
-  async createEvent(userId: string, eventData: Omit<InsertEvent, 'userId' | 'orgId'>): Promise<Event> {
-    // Get user's orgId from the auth context
-    // For now, we'll use orgId: 1 as default (matching the ensureUserExists middleware)
-    const orgId = 1;
-
+  async createEvent(userId: number, eventData: Omit<InsertEvent, 'userId'>): Promise<Event> {
     const newEvent = await db
       .insert(events)
       .values({
         ...eventData,
         userId,
-        orgId,
       })
       .returning();
 
@@ -41,9 +36,9 @@ export class EventsService {
   }
 
   async updateEvent(
-    userId: string, 
+    userId: number, 
     eventId: number, 
-    eventData: Partial<Omit<InsertEvent, 'userId' | 'orgId'>>
+    eventData: Partial<Omit<InsertEvent, 'userId'>>
   ): Promise<Event | null> {
     const updatedEvent = await db
       .update(events)
@@ -57,7 +52,7 @@ export class EventsService {
     return updatedEvent[0] || null;
   }
 
-  async deleteEvent(userId: string, eventId: number): Promise<boolean> {
+  async deleteEvent(userId: number, eventId: number): Promise<boolean> {
     const result = await db
       .delete(events)
       .where(and(eq(events.id, eventId), eq(events.userId, userId)))

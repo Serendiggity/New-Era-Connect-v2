@@ -7,7 +7,7 @@ const router = Router();
 // GET /api/events - Get all events for the authenticated user
 router.get('/', async (req, res) => {
   try {
-    const userId = req.auth!.userId;
+    const userId = req.user!.id;
     const events = await eventsService.getEvents(userId);
     res.json({ data: events });
   } catch (error) {
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 // GET /api/events/:id - Get a specific event
 router.get('/:id', async (req, res) => {
   try {
-    const userId = req.auth!.userId;
+    const userId = req.user!.id;
     const eventId = parseInt(req.params.id);
     
     if (isNaN(eventId)) {
@@ -42,7 +42,7 @@ router.get('/:id', async (req, res) => {
 // POST /api/events - Create a new event
 router.post('/', async (req, res) => {
   try {
-    const userId = req.auth!.userId;
+    const userId = req.user!.id;
     
     // Validate request body
     const validation = insertEventSchema.safeParse(req.body);
@@ -53,7 +53,7 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const { userId: _, orgId: __, ...eventData } = validation.data;
+    const { userId: _, ...eventData } = validation.data;
     const event = await eventsService.createEvent(userId, eventData);
     
     res.status(201).json({ data: event });
@@ -66,7 +66,7 @@ router.post('/', async (req, res) => {
 // PUT /api/events/:id - Update an existing event
 router.put('/:id', async (req, res) => {
   try {
-    const userId = req.auth!.userId;
+    const userId = req.user!.id;
     const eventId = parseInt(req.params.id);
     
     if (isNaN(eventId)) {
@@ -82,7 +82,7 @@ router.put('/:id', async (req, res) => {
       });
     }
 
-    const { userId: _, orgId: __, ...eventData } = validation.data;
+    const { userId: _, ...eventData } = validation.data;
     const event = await eventsService.updateEvent(userId, eventId, eventData);
     
     if (!event) {
@@ -99,7 +99,7 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/events/:id - Delete an event
 router.delete('/:id', async (req, res) => {
   try {
-    const userId = req.auth!.userId;
+    const userId = req.user!.id;
     const eventId = parseInt(req.params.id);
     
     if (isNaN(eventId)) {
